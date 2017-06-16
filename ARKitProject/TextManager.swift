@@ -1,10 +1,3 @@
-/*
-See LICENSE folder for this sample’s licensing information.
-
-Abstract:
-Utility class for showing messages above the AR view.
-*/
-
 import Foundation
 import ARKit
 
@@ -22,21 +15,13 @@ class TextManager {
 	}
 	
 	func showMessage(_ text: String, autoHide: Bool = true) {
-		// cancel any previous hide timer
 		messageHideTimer?.invalidate()
 		
-		// set text
 		viewController.messageLabel.text = text
 		
-		// make sure status is showing
 		showHideMessage(hide: false, animated: true)
 		
 		if autoHide {
-			// Compute an appropriate amount of time to display the on screen message.
-			// According to https://en.wikipedia.org/wiki/Words_per_minute, adults read
-			// about 200 words per minute and the average English word is 5 characters
-			// long. So 1000 characters per minute / 60 = 15 characters per second.
-			// We limit the duration to a range of 1-10 seconds.
 			let charCount = text.characters.count
 			let displayDuration: TimeInterval = min(10, Double(charCount) / 15.0 + 1.0)
 			messageHideTimer = Timer.scheduledTimer(withTimeInterval: displayDuration,
@@ -52,20 +37,12 @@ class TextManager {
 			return
 		}
 		
-		// cancel any previous hide timer
 		debugMessageHideTimer?.invalidate()
 		
-		// set text
 		viewController.debugMessageLabel.text = message
 		
-		// make sure debug message is showing
 		showHideDebugMessage(hide: false, animated: true)
 		
-		// Compute an appropriate amount of time to display the on screen message.
-		// According to https://en.wikipedia.org/wiki/Words_per_minute, adults read
-		// about 200 words per minute and the average English word is 5 characters
-		// long. So 1000 characters per minute / 60 = 15 characters per second.
-		// We limit the duration to a range of 1-10 seconds.
 		let charCount = message.characters.count
 		let displayDuration: TimeInterval = min(10, Double(charCount) / 15.0 + 1.0)
 		debugMessageHideTimer = Timer.scheduledTimer(withTimeInterval: displayDuration,

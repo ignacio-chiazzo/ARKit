@@ -4,7 +4,7 @@ import SceneKit
 import UIKit
 import Photos
 
-class MainViewController: UIViewController, ARSCNViewDelegate, UIPopoverPresentationControllerDelegate, VirtualObjectSelectionViewControllerDelegate {
+class MainViewController: UIViewController {
 	
     // MARK: - Main Setup & View Controller methods
     override func viewDidLoad() {
@@ -51,15 +51,12 @@ class MainViewController: UIViewController, ARSCNViewDelegate, UIPopoverPresenta
 	var screenCenter: CGPoint?
     
     func setupScene() {
-        // set up sceneView
         sceneView.delegate = self
         sceneView.session = session
 		sceneView.antialiasingMode = .multisampling4X
 		sceneView.automaticallyUpdatesLighting = false
-		
 		sceneView.preferredFramesPerSecond = 60
 		sceneView.contentScaleFactor = 1.3
-		//sceneView.showsStatistics = true
 		
 		enableEnvironmentMapWithIntensity(25.0)
 		
@@ -83,50 +80,6 @@ class MainViewController: UIViewController, ARSCNViewDelegate, UIPopoverPresenta
 		}
 		sceneView.scene.lightingEnvironment.intensity = intensity
 	}
-	
-    // MARK: - ARSCNViewDelegate
-	
-	func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-		refreshFeaturePoints()
-		
-		DispatchQueue.main.async {
-			self.updateFocusSquare()
-			self.hitTestVisualization?.render()
-			
-			// If light estimation is enabled, update the intensity of the model's lights and the environment map
-			if let lightEstimate = self.session.currentFrame?.lightEstimate {
-				self.enableEnvironmentMapWithIntensity(lightEstimate.ambientIntensity / 40)
-			} else {
-				self.enableEnvironmentMapWithIntensity(25)
-			}
-		}
-	}
-	
-    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        DispatchQueue.main.async {
-            if let planeAnchor = anchor as? ARPlaneAnchor {
-				self.addPlane(node: node, anchor: planeAnchor)
-                self.checkIfObjectShouldMoveOntoPlane(anchor: planeAnchor)
-            }
-        }
-    }
-	
-    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-        DispatchQueue.main.async {
-            if let planeAnchor = anchor as? ARPlaneAnchor {
-                self.updatePlane(anchor: planeAnchor)
-                self.checkIfObjectShouldMoveOntoPlane(anchor: planeAnchor)
-            }
-        }
-    }
-	
-    func renderer(_ renderer: SCNSceneRenderer, didRemove node: SCNNode, for anchor: ARAnchor) {
-        DispatchQueue.main.async {
-            if let planeAnchor = anchor as? ARPlaneAnchor {
-                self.removePlane(anchor: planeAnchor)
-            }
-        }
-    }
 	
 	var trackingFallbackTimer: Timer?
 
@@ -491,47 +444,6 @@ class MainViewController: UIViewController, ARSCNViewDelegate, UIPopoverPresenta
 	
 	@IBOutlet weak var addObjectButton: UIButton!
 	
-	func loadVirtualObject(at index: Int) {
-		//resetVirtualObject()
-		
-		// Show progress indicator
-		let spinner = UIActivityIndicatorView()
-		spinner.center = addObjectButton.center
-		spinner.bounds.size = CGSize(width: addObjectButton.bounds.width - 5, height: addObjectButton.bounds.height - 5)
-		addObjectButton.setImage(#imageLiteral(resourceName: "buttonring"), for: [])
-		sceneView.addSubview(spinner)
-		spinner.startAnimating()
-		
-		// Load the content asynchronously.
-		DispatchQueue.global().async {
-			self.isLoadingObject = true
-			let object = VirtualObject.availableObjects[index]
-			object.viewController = self
-			self.virtualObject = object
-			
-			object.loadModel()
-			
-			DispatchQueue.main.async {
-				// Immediately place the object in 3D space.
-				if let lastFocusSquarePos = self.focusSquare?.lastPosition {
-					self.setNewVirtualObjectPosition(lastFocusSquarePos)
-				} else {
-					self.setNewVirtualObjectPosition(SCNVector3Zero)
-				}
-				
-				// Remove progress indicator
-				spinner.removeFromSuperview()
-				
-				// Update the icon of the add object button
-				let buttonImage = UIImage.composeButtonImage(from: object.thumbImage)
-				let pressedButtonImage = UIImage.composeButtonImage(from: object.thumbImage, alpha: 0.3)
-				self.addObjectButton.setImage(buttonImage, for: [])
-				self.addObjectButton.setImage(pressedButtonImage, for: [.highlighted])
-				self.isLoadingObject = false
-			}
-		}
-    }
-	
 	@IBAction func chooseObject(_ button: UIButton) {
 		// Abort if we are about to load another object to avoid concurrent modifications of the scene.
 		if isLoadingObject { return }
@@ -550,16 +462,6 @@ class MainViewController: UIViewController, ARSCNViewDelegate, UIPopoverPresenta
 		objectViewController.popoverPresentationController?.sourceView = button
 		objectViewController.popoverPresentationController?.sourceRect = button.bounds
     }
-	
-	// MARK: - VirtualObjectSelectionViewControllerDelegate
-	
-	func virtualObjectSelectionViewController(_: VirtualObjectSelectionViewController, didSelectObjectAt index: Int) {
-		loadVirtualObject(at: index)
-	}
-	
-	func virtualObjectSelectionViewControllerDidDeselectObject(_: VirtualObjectSelectionViewController) {
-		resetVirtualObject()
-	}
 	
     // MARK: - Planes
 	
@@ -693,7 +595,6 @@ class MainViewController: UIViewController, ARSCNViewDelegate, UIPopoverPresenta
     }
     
     func setupDebug() {
-		// Set appearance of debug output panel
 		messagePanel.layer.cornerRadius = 3.0
 		messagePanel.clipsToBounds = true
     }
@@ -708,10 +609,7 @@ class MainViewController: UIViewController, ARSCNViewDelegate, UIPopoverPresenta
 	
     func setupUIControls() {
 		textManager = TextManager(viewController: self)
-		
-        // hide debug message view
 		debugMessageLabel.isHidden = true
-		
 		featurePointCountLabel.text = ""
 		debugMessageLabel.text = ""
 		messageLabel.text = ""
@@ -757,7 +655,6 @@ class MainViewController: UIViewController, ARSCNViewDelegate, UIPopoverPresenta
 		let takeScreenshotBlock = {
 			UIImageWriteToSavedPhotosAlbum(self.sceneView.snapshot(), nil, nil, nil)
 			DispatchQueue.main.async {
-				// Briefly flash the screen.
 				let flashOverlay = UIView(frame: self.sceneView.frame)
 				flashOverlay.backgroundColor = UIColor.white
 				self.sceneView.addSubview(flashOverlay)
@@ -832,7 +729,6 @@ class MainViewController: UIViewController, ARSCNViewDelegate, UIPopoverPresenta
 	// MARK: - Error handling
 	
 	func displayErrorMessage(title: String, message: String, allowRestart: Bool = false) {
-		// Blur the background.
 		textManager.blurBackground()
 		
 		if allowRestart {
@@ -846,13 +742,113 @@ class MainViewController: UIViewController, ARSCNViewDelegate, UIPopoverPresenta
 			textManager.showAlert(title: title, message: message, actions: [])
 		}
 	}
-	
-	// MARK: - UIPopoverPresentationControllerDelegate
+}
+
+// MARK: - UIPopoverPresentationControllerDelegate
+extension MainViewController: UIPopoverPresentationControllerDelegate {
 	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
 		return .none
 	}
 	
 	func popoverPresentationControllerDidDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) {
 		updateSettings()
+	}
+}
+
+// MARK: - VirtualObjectSelectionViewControllerDelegate
+extension MainViewController :VirtualObjectSelectionViewControllerDelegate {
+	func virtualObjectSelectionViewController(_: VirtualObjectSelectionViewController, didSelectObjectAt index: Int) {
+		loadVirtualObject(at: index)
+	}
+	
+	func virtualObjectSelectionViewControllerDidDeselectObject(_: VirtualObjectSelectionViewController) {
+		resetVirtualObject()
+	}
+	
+	func loadVirtualObject(at index: Int) {
+		resetVirtualObject()
+		
+		// Show progress indicator
+		let spinner = UIActivityIndicatorView()
+		spinner.center = addObjectButton.center
+		spinner.bounds.size = CGSize(width: addObjectButton.bounds.width - 5, height: addObjectButton.bounds.height - 5)
+		addObjectButton.setImage(#imageLiteral(resourceName: "buttonring"), for: [])
+		sceneView.addSubview(spinner)
+		spinner.startAnimating()
+		
+		// Load the content asynchronously.
+		DispatchQueue.global().async {
+			self.isLoadingObject = true
+			let object = VirtualObject.availableObjects[index]
+			object.viewController = self
+			self.virtualObject = object
+			
+			object.loadModel()
+			
+			DispatchQueue.main.async {
+				// Immediately place the object in 3D space.
+				if let lastFocusSquarePos = self.focusSquare?.lastPosition {
+					self.setNewVirtualObjectPosition(lastFocusSquarePos)
+				} else {
+					self.setNewVirtualObjectPosition(SCNVector3Zero)
+				}
+				
+				// Remove progress indicator
+				spinner.removeFromSuperview()
+				
+				// Update the icon of the add object button
+				let buttonImage = UIImage.composeButtonImage(from: object.thumbImage)
+				let pressedButtonImage = UIImage.composeButtonImage(from: object.thumbImage, alpha: 0.3)
+				self.addObjectButton.setImage(buttonImage, for: [])
+				self.addObjectButton.setImage(pressedButtonImage, for: [.highlighted])
+				self.isLoadingObject = false
+			}
+		}
+	}
+}
+	
+// MARK: - ARSCNViewDelegate
+extension MainViewController :ARSCNViewDelegate {
+	func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+		refreshFeaturePoints()
+		
+		DispatchQueue.main.async {
+			self.updateFocusSquare()
+			self.hitTestVisualization?.render()
+			
+			// If light estimation is enabled, update the intensity of the model's lights and the environment map
+			if let lightEstimate = self.session.currentFrame?.lightEstimate {
+				self.enableEnvironmentMapWithIntensity(lightEstimate.ambientIntensity / 40)
+			} else {
+				self.enableEnvironmentMapWithIntensity(25)
+			}
+		}
+	}
+	
+	func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+		DispatchQueue.main.async {
+			if let planeAnchor = anchor as? ARPlaneAnchor {
+				self.addPlane(node: node, anchor: planeAnchor)
+				self.checkIfObjectShouldMoveOntoPlane(anchor: planeAnchor)
+			}
+		}
+	}
+	
+	func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+		DispatchQueue.main.async {
+			if let planeAnchor = anchor as? ARPlaneAnchor {
+				self.updatePlane(anchor: planeAnchor)
+				self.checkIfObjectShouldMoveOntoPlane(anchor: planeAnchor)
+			}
+		}
+	}
+	
+	
+	func renderer(_ renderer: SCNSceneRenderer, didRemove node: SCNNode, for anchor: ARAnchor) {
+		DispatchQueue.main.async {
+			if let planeAnchor = anchor as? ARPlaneAnchor {
+				self.removePlane(anchor: planeAnchor)
+			}
+		}
 	}
 }

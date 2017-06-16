@@ -32,7 +32,6 @@ class VirtualObjectSelectionViewController: UIViewController, UITableViewDataSou
 		
 		self.view.addSubview(tableView)
 		
-		// Retrieve the row of the currently selected object
 		selectedVirtualObjectRow = UserDefaults.standard.integer(for: .selectedObjectID)
 	}
 	
@@ -56,7 +55,6 @@ class VirtualObjectSelectionViewController: UIViewController, UITableViewDataSou
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cellIsSelected = indexPath.row == selectedVirtualObjectRow
 		
-		// Create a table view cell.
 		let cell = UITableViewCell()
 		let label = UILabel(frame: CGRect(x: 53, y: 10, width: 200, height: 30))
 		let icon = UIImageView(frame: CGRect(x: 15, y: 10, width: 30, height: 30))
