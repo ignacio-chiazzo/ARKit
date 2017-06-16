@@ -1,3 +1,10 @@
+/*
+See LICENSE folder for this sample’s licensing information.
+
+Abstract:
+Utility functions and type extensions used throughout the projects.
+*/
+
 import Foundation
 import ARKit
 

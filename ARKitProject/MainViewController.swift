@@ -4,7 +4,7 @@ import SceneKit
 import UIKit
 import Photos
 
-class ViewController: UIViewController, ARSCNViewDelegate, UIPopoverPresentationControllerDelegate, VirtualObjectSelectionViewControllerDelegate {
+class MainViewController: UIViewController, ARSCNViewDelegate, UIPopoverPresentationControllerDelegate, VirtualObjectSelectionViewControllerDelegate {
 	
     // MARK: - Main Setup & View Controller methods
     override func viewDidLoad() {
@@ -492,7 +492,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIPopoverPresentation
 	@IBOutlet weak var addObjectButton: UIButton!
 	
 	func loadVirtualObject(at index: Int) {
-		resetVirtualObject()
+		//resetVirtualObject()
 		
 		// Show progress indicator
 		let spinner = UIActivityIndicatorView()

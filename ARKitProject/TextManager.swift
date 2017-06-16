@@ -1,3 +1,10 @@
+/*
+See LICENSE folder for this sample’s licensing information.
+
+Abstract:
+Utility class for showing messages above the AR view.
+*/
+
 import Foundation
 import ARKit
 
@@ -10,7 +17,7 @@ enum MessageType {
 
 class TextManager {
 	
-	init(viewController: ViewController) {
+	init(viewController: MainViewController) {
 		self.viewController = viewController
 	}
 	
@@ -204,7 +211,7 @@ class TextManager {
 	}
 	
 	// MARK: - Private
-	private var viewController: ViewController!
+	private var viewController: MainViewController!
 	
 	// Timers for hiding regular and debug messages
 	private var messageHideTimer: Timer?

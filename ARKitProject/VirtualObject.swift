@@ -10,7 +10,7 @@ class VirtualObject: SCNNode {
 	var title: String = ""
 	var modelLoaded: Bool = false
 	
-	var viewController: ViewController?
+	var viewController: MainViewController?
 	
 	override init() {
 		super.init()
@@ -84,7 +84,7 @@ extension VirtualObject {
 	static let availableObjects: [VirtualObject] = [
 		Candle(),
 		Cup(),
-        Vase(),
+		Vase(),
 		Lamp(),
 		Chair()
 	]

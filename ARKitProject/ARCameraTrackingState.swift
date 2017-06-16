@@ -1,3 +1,10 @@
+/*
+See LICENSE folder for this sample’s licensing information.
+
+Abstract:
+Presentation information about the current tracking state.
+*/
+
 import Foundation
 import ARKit
 
