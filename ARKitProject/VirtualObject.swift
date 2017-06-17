@@ -3,7 +3,7 @@ import SceneKit
 import ARKit
 
 class VirtualObject: SCNNode {
-	
+	static let ROOT_NAME = "Virtual object root node"
 	var modelName: String = ""
 	var fileExtension: String = ""
 	var thumbImage: UIImage!
@@ -14,12 +14,12 @@ class VirtualObject: SCNNode {
 	
 	override init() {
 		super.init()
-		self.name = "Virtual object root node"
+		self.name = VirtualObject.ROOT_NAME
 	}
 	
 	init(modelName: String, fileExtension: String, thumbImageFilename: String, title: String) {
 		super.init()
-		self.name = "Virtual object root node"
+		self.name = VirtualObject.ROOT_NAME
 		self.modelName = modelName
 		self.fileExtension = fileExtension
 		self.thumbImage = UIImage(named: thumbImageFilename)
@@ -56,13 +56,10 @@ class VirtualObject: SCNNode {
 	}
 	
 	func translateBasedOnScreenPos(_ pos: CGPoint, instantly: Bool, infinitePlane: Bool) {
-		
 		guard let controller = viewController else {
 			return
 		}
-		
 		let result = controller.worldPositionFromScreenPosition(pos, objectPos: self.position, infinitePlane: infinitePlane)
-
 		controller.moveVirtualObjectToPosition(result.position, instantly, !result.hitAPlane)
 	}
 }
@@ -70,7 +67,7 @@ class VirtualObject: SCNNode {
 extension VirtualObject {
 	
 	static func isNodePartOfVirtualObject(_ node: SCNNode) -> Bool {
-		if node.name == "Virtual object root node" {
+		if node.name == VirtualObject.ROOT_NAME {
 			return true
 		}
 		
