@@ -3,7 +3,6 @@ import Foundation
 import SceneKit
 
 extension ARSCNView {
-	
 	func setUp(viewController: MainViewController, session: ARSession) {
 		delegate = viewController
 		self.session = session

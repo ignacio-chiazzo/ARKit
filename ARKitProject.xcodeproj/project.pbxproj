@@ -98,19 +98,19 @@
 			children = (
 				3929C48B1E89EC2C00E00B60 /* AppDelegate.swift */,
 				3929C48D1E89EC2C00E00B60 /* MainViewController.swift */,
-				C40DF57B1EC2330700D9D59E /* Virtual Objects */,
-				113B64D01ECA81CA0071CBD1 /* UI Elements */,
 				39C0B9571E9C6B1F003FCA0C /* SettingsViewController.swift */,
 				C490DAC31E9AB63400210960 /* VirtualObjectSelectionViewController.swift */,
 				C41366B81EB80DD400EC054A /* TextManager.swift */,
 				C4FBC02A1EC6438B003F7864 /* ARCameraTrackingState.swift */,
+				A35A11CE1EF4EB070072FE74 /* ScieneView+Extension.swift */,
 				39C0B9581E9C6B1F003FCA0C /* Utilities.swift */,
+				113B64D01ECA81CA0071CBD1 /* UI Elements */,
+				C40DF57B1EC2330700D9D59E /* Virtual Objects */,
 				3929C49E1E89EE4400E00B60 /* Models.scnassets */,
 				3929C4921E89EC2C00E00B60 /* Assets.xcassets */,
 				3929C4971E89EC2C00E00B60 /* Info.plist */,
 				3929C48F1E89EC2C00E00B60 /* Main.storyboard */,
 				39D8DC1A1E8ADAE600386B05 /* LaunchScreen.storyboard */,
-				A35A11CE1EF4EB070072FE74 /* ScieneView+Extension.swift */,
 			);
 			path = ARKitProject;
 			sourceTree = "<group>";
