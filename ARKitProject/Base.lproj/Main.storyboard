@@ -28,9 +28,6 @@
                                     <constraint firstAttribute="width" constant="64" id="0MV-Vc-tJN"/>
                                     <constraint firstAttribute="height" constant="64" id="NF3-2t-7ce"/>
                                 </constraints>
-                                <connections>
-                                    <action selector="takeScreenshot" destination="BV1-FR-VrT" eventType="touchUpInside" id="d8J-hR-V75"/>
-                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q5A-xD-w2H" userLabel="Settings Button Hit Area">
                                 <rect key="frame" x="311" y="603" width="64" height="64"/>
@@ -65,7 +62,7 @@
                                 <state key="selected" image="shutterPressed"/>
                                 <state key="highlighted" image="shutterPressed"/>
                                 <connections>
-                                    <action selector="takeScreenshot" destination="BV1-FR-VrT" eventType="touchUpInside" id="WC9-Ab-ZYV"/>
+                                    <action selector="takeSnapShot" destination="BV1-FR-VrT" eventType="touchUpInside" id="gnz-Fm-TFA"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="j8v-6q-UBb">
@@ -487,7 +484,7 @@
         <image name="restartPressed" width="20" height="23"/>
         <image name="settings" width="41" height="48"/>
         <image name="settingsPressed" width="41" height="48"/>
-        <image name="shutter" width="48" height="48"/>
-        <image name="shutterPressed" width="48" height="48"/>
+        <image name="shutter" width="512" height="512"/>
+        <image name="shutterPressed" width="512" height="512"/>
     </resources>
 </document>

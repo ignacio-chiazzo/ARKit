@@ -269,40 +269,26 @@ class MainViewController: UIViewController {
 	}
 	
 	@IBOutlet weak var screenshotButton: UIButton!
-	
-	@IBAction func takeScreenshot() {
-		guard screenshotButton.isEnabled else {
-			return
-		}
+	@IBAction func takeSnapShot() {
+		guard let currentFrame = sceneView.session.currentFrame else { return }
+		focusSquare?.isHidden = true
 		
-		let takeScreenshotBlock = {
-			UIImageWriteToSavedPhotosAlbum(self.sceneView.snapshot(), nil, nil, nil)
-			DispatchQueue.main.async {
-				let flashOverlay = UIView(frame: self.sceneView.frame)
-				flashOverlay.backgroundColor = UIColor.white
-				self.sceneView.addSubview(flashOverlay)
-				UIView.animate(withDuration: 0.25, animations: {
-					flashOverlay.alpha = 0.0
-				}, completion: { _ in
-					flashOverlay.removeFromSuperview()
-				})
-			}
-		}
+		// Create an image plane using a snapshot of the view
+		let imagePlane = SCNPlane(width: sceneView.bounds.width / 6000, height: sceneView.bounds.height / 6000)
+		imagePlane.firstMaterial?.diffuse.contents = sceneView.snapshot()
+		imagePlane.firstMaterial?.lightingModel = .constant
 		
-		switch PHPhotoLibrary.authorizationStatus() {
-		case .authorized:
-			takeScreenshotBlock()
-		case .restricted, .denied:
-			let title = "Photos access denied"
-			let message = "Please enable Photos access for this application in Settings > Privacy to allow saving screenshots."
-			textManager.showAlert(title: title, message: message)
-		case .notDetermined:
-			PHPhotoLibrary.requestAuthorization({ (authorizationStatus) in
-				if authorizationStatus == .authorized {
-					takeScreenshotBlock()
-				}
-			})
-		}
+		// Create a plane node and add it to the scene
+		let planeNode = SCNNode(geometry: imagePlane)
+		sceneView.scene.rootNode.addChildNode(planeNode)
+		
+		// Set transform of node to be 10cm in front of camera
+		var translation = matrix_identity_float4x4
+		translation.columns.3.z = -0.50 // translation is 10cm in the z-axis
+		planeNode.simdWorldTransform = matrix_multiply(currentFrame.camera.transform, translation) // Apply translation to the plane
+		
+		focusSquare?.isHidden = false
+		displayVirtualObjectTransform()
 	}
 		
 	// MARK: - Settings
