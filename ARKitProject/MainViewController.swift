@@ -5,13 +5,21 @@ import UIKit
 import Photos
 
 class MainViewController: UIViewController {
-	
 	var dragOnInfinitePlanesEnabled = false
+	var currentGesture: Gesture?
+	
+	var use3DOFTrackingFallback = false
+	var screenCenter: CGPoint?
+	
+	let session = ARSession()
+	var sessionConfig: ARSessionConfiguration = ARWorldTrackingSessionConfiguration()
+	
+	var trackingFallbackTimer: Timer?
+	
 	// Use average of recent virtual object distances to avoid rapid changes in object scale.
 	var recentVirtualObjectDistances = [CGFloat]()
 	
-	// MARK: - Main Setup & View Controller methods
-    override func viewDidLoad() {
+	override func viewDidLoad() {
         super.viewDidLoad()
 
         Setting.registerDefaults()
@@ -26,10 +34,7 @@ class MainViewController: UIViewController {
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		
-		// Prevent the screen from being dimmed after a while.
 		UIApplication.shared.isIdleTimerDisabled = true
-		
-		// Start the ARSession.
 		restartPlaneDetection()
 	}
 	
@@ -39,9 +44,7 @@ class MainViewController: UIViewController {
 	}
 	
     // MARK: - ARKit / ARSCNView
-    let session = ARSession()
-	var sessionConfig: ARSessionConfiguration = ARWorldTrackingSessionConfiguration()
-	var use3DOFTracking = false {
+    var use3DOFTracking = false {
 		didSet {
 			if use3DOFTracking {
 				sessionConfig = ARSessionConfiguration()
@@ -50,43 +53,15 @@ class MainViewController: UIViewController {
 			session.run(sessionConfig)
 		}
 	}
-	var use3DOFTrackingFallback = false
-    @IBOutlet var sceneView: ARSCNView!
-	var screenCenter: CGPoint?
-    
+	@IBOutlet var sceneView: ARSCNView!
+	
     func setupScene() {
-        sceneView.delegate = self
-        sceneView.session = session
-		sceneView.antialiasingMode = .multisampling4X
-		sceneView.automaticallyUpdatesLighting = false
-		sceneView.preferredFramesPerSecond = 60
-		sceneView.contentScaleFactor = 1.3
-		
-		enableEnvironmentMapWithIntensity(25.0)
-		
+		sceneView.setUp(viewController: self, session: session)
 		DispatchQueue.main.async {
 			self.screenCenter = self.sceneView.bounds.mid
 		}
-		
-		if let camera = sceneView.pointOfView?.camera {
-			camera.wantsHDR = true
-			camera.wantsExposureAdaptation = true
-			camera.exposureOffset = -1
-			camera.minimumExposure = -1
-		}
     }
 	
-	func enableEnvironmentMapWithIntensity(_ intensity: CGFloat) {
-		if sceneView.scene.lightingEnvironment.contents == nil {
-			if let environmentMap = UIImage(named: "Models.scnassets/sharedImages/environment_blur.exr") {
-				sceneView.scene.lightingEnvironment.contents = environmentMap
-			}
-		}
-		sceneView.scene.lightingEnvironment.intensity = intensity
-	}
-	
-	var trackingFallbackTimer: Timer?
-
 	func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
         textManager.showTrackingQualityInfo(for: camera.trackingState, autoHide: !self.showDebugVisuals)
 
@@ -114,7 +89,6 @@ class MainViewController: UIViewController {
 	}
 	
     func session(_ session: ARSession, didFailWithError error: Error) {
-
         guard let arError = error as? ARError else { return }
 
         let nsError = error as NSError
@@ -165,49 +139,6 @@ class MainViewController: UIViewController {
 			}
         }
     }
-
-    // MARK: - Gesture Recognizers
-	
-	var currentGesture: Gesture?
-	
-	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-		guard let object = virtualObject else {
-			return
-		}
-		
-		if currentGesture == nil {
-			currentGesture = Gesture.startGestureFromTouches(touches, self.sceneView, object)
-		} else {
-			currentGesture = currentGesture!.updateGestureFromTouches(touches, .touchBegan)
-		}
-		
-		displayVirtualObjectTransform()
-	}
-	
-	override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-		if virtualObject == nil {
-			return
-		}
-		currentGesture = currentGesture?.updateGestureFromTouches(touches, .touchMoved)
-		displayVirtualObjectTransform()
-	}
-	
-	override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-		if virtualObject == nil {
-			chooseObject(addObjectButton)
-			return
-		}
-		
-		currentGesture = currentGesture?.updateGestureFromTouches(touches, .touchEnded)
-	}
-	
-	override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-		if virtualObject == nil {
-			return
-		}
-		currentGesture = currentGesture?.updateGestureFromTouches(touches, .touchCancelled)
-	}
-	
 	
     // MARK: - Virtual Object Loading
 	var virtualObject: VirtualObject?
@@ -263,21 +194,8 @@ class MainViewController: UIViewController {
 			textManager.scheduleMessage("TAP + TO PLACE AN OBJECT", inSeconds: 7.5, messageType: .contentPlacement)
 		}
 	}
-		
-    func updatePlane(anchor: ARPlaneAnchor) {
-        if let plane = planes[anchor] {
-			plane.update(anchor)
-		}
-	}
-			
-    func removePlane(anchor: ARPlaneAnchor) {
-		if let plane = planes.removeValue(forKey: anchor) {
-			plane.removeFromParentNode()
-        }
-    }
 	
 	func restartPlaneDetection() {
-		
 		// configure session
 		if let worldSessionConfig = sessionConfig as? ARWorldTrackingSessionConfiguration {
 			worldSessionConfig.planeDetection = .horizontal
@@ -290,9 +208,7 @@ class MainViewController: UIViewController {
 			trackingFallbackTimer = nil
 		}
 		
-		textManager.scheduleMessage("FIND A SURFACE TO PLACE AN OBJECT",
-		                            inSeconds: 7.5,
-		                            messageType: .planeEstimation)
+		textManager.scheduleMessage("FIND A SURFACE TO PLACE AN OBJECT", inSeconds: 7.5, messageType: .planeEstimation)
 	}
 
     // MARK: - Focus Square
@@ -399,7 +315,6 @@ class MainViewController: UIViewController {
 	var restartExperienceButtonIsEnabled = true
 	
 	@IBAction func restartExperience(_ sender: Any) {
-		
 		guard restartExperienceButtonIsEnabled, !isLoadingObject else {
 			return
 		}
@@ -512,7 +427,6 @@ class MainViewController: UIViewController {
 		textManager.blurBackground()
 		
 		if allowRestart {
-			// Present an alert informing about the error that has occurred.
 			let restartAction = UIAlertAction(title: "Reset", style: .default) { _ in
 				self.textManager.unblurBackground()
 				self.restartExperience(self)
@@ -521,6 +435,47 @@ class MainViewController: UIViewController {
 		} else {
 			textManager.showAlert(title: title, message: message, actions: [])
 		}
+	}
+}
+
+// MARK: Gesture Recognized
+extension MainViewController {
+	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+		guard let object = virtualObject else {
+			return
+		}
+		
+		if currentGesture == nil {
+			currentGesture = Gesture.startGestureFromTouches(touches, self.sceneView, object)
+		} else {
+			currentGesture = currentGesture!.updateGestureFromTouches(touches, .touchBegan)
+		}
+		
+		displayVirtualObjectTransform()
+	}
+	
+	override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+		if virtualObject == nil {
+			return
+		}
+		currentGesture = currentGesture?.updateGestureFromTouches(touches, .touchMoved)
+		displayVirtualObjectTransform()
+	}
+	
+	override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+		if virtualObject == nil {
+			chooseObject(addObjectButton)
+			return
+		}
+		
+		currentGesture = currentGesture?.updateGestureFromTouches(touches, .touchEnded)
+	}
+	
+	override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+		if virtualObject == nil {
+			return
+		}
+		currentGesture = currentGesture?.updateGestureFromTouches(touches, .touchCancelled)
 	}
 }
 
@@ -573,7 +528,6 @@ extension MainViewController :VirtualObjectSelectionViewControllerDelegate {
 					self.setNewVirtualObjectPosition(SCNVector3Zero)
 				}
 				
-				// Remove progress indicator
 				spinner.removeFromSuperview()
 				
 				// Update the icon of the add object button
@@ -586,7 +540,7 @@ extension MainViewController :VirtualObjectSelectionViewControllerDelegate {
 		}
 	}
 }
-	
+
 // MARK: - ARSCNViewDelegate
 extension MainViewController :ARSCNViewDelegate {
 	func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
@@ -598,9 +552,9 @@ extension MainViewController :ARSCNViewDelegate {
 			
 			// If light estimation is enabled, update the intensity of the model's lights and the environment map
 			if let lightEstimate = self.session.currentFrame?.lightEstimate {
-				self.enableEnvironmentMapWithIntensity(lightEstimate.ambientIntensity / 40)
+				self.sceneView.enableEnvironmentMapWithIntensity(lightEstimate.ambientIntensity / 40)
 			} else {
-				self.enableEnvironmentMapWithIntensity(25)
+				self.sceneView.enableEnvironmentMapWithIntensity(25)
 			}
 		}
 	}
@@ -617,17 +571,18 @@ extension MainViewController :ARSCNViewDelegate {
 	func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
 		DispatchQueue.main.async {
 			if let planeAnchor = anchor as? ARPlaneAnchor {
-				self.updatePlane(anchor: planeAnchor)
+				if let plane = self.planes[planeAnchor] {
+					plane.update(planeAnchor as! ARPlaneAnchor)
+				}
 				self.checkIfObjectShouldMoveOntoPlane(anchor: planeAnchor)
 			}
 		}
 	}
 	
-	
 	func renderer(_ renderer: SCNSceneRenderer, didRemove node: SCNNode, for anchor: ARAnchor) {
 		DispatchQueue.main.async {
-			if let planeAnchor = anchor as? ARPlaneAnchor {
-				self.removePlane(anchor: planeAnchor)
+			if let planeAnchor = anchor as? ARPlaneAnchor, let plane = self.planes.removeValue(forKey: planeAnchor) {
+				plane.removeFromParentNode()
 			}
 		}
 	}
