@@ -73,7 +73,7 @@ class MainViewController: UIViewController {
     }
 	
     // MARK: - Virtual Object Loading
-	var virtualObject: VirtualObject?
+	var virtualObject: VirtualObject? // TODO: Remove this and create an array with virtualobject
 	var isLoadingObject: Bool = false {
 		didSet {
 			DispatchQueue.main.async {
@@ -94,7 +94,7 @@ class MainViewController: UIViewController {
 		textManager.cancelScheduledMessage(forType: .contentPlacement)
 		
 		let rowHeight = 45
-		let popoverSize = CGSize(width: 250, height: rowHeight * VirtualObject.availableObjects.count)
+		let popoverSize = CGSize(width: 250, height: rowHeight * VirtualObjectSelectionViewController.COUNT_OBJECTS)
 		
 		let objectViewController = VirtualObjectSelectionViewController(size: popoverSize)
 		objectViewController.delegate = self
@@ -466,17 +466,11 @@ extension MainViewController: UIPopoverPresentationControllerDelegate {
 
 // MARK: - VirtualObjectSelectionViewControllerDelegate
 extension MainViewController :VirtualObjectSelectionViewControllerDelegate {
-	func virtualObjectSelectionViewController(_: VirtualObjectSelectionViewController, didSelectObjectAt index: Int) {
-		loadVirtualObject(at: index)
+	func virtualObjectSelectionViewController(_: VirtualObjectSelectionViewController, object: VirtualObject) {
+		loadVirtualObject(object: object)
 	}
 	
-	func virtualObjectSelectionViewControllerDidDeselectObject(_: VirtualObjectSelectionViewController) {
-		resetVirtualObject()
-	}
-	
-	func loadVirtualObject(at index: Int) {
-		resetVirtualObject()
-		
+	func loadVirtualObject(object: VirtualObject) {
 		// Show progress indicator
 		let spinner = UIActivityIndicatorView()
 		spinner.center = addObjectButton.center
@@ -485,17 +479,14 @@ extension MainViewController :VirtualObjectSelectionViewControllerDelegate {
 		sceneView.addSubview(spinner)
 		spinner.startAnimating()
 		
-		// Load the content asynchronously.
 		DispatchQueue.global().async {
 			self.isLoadingObject = true
-			let object = VirtualObject.availableObjects[index]
 			object.viewController = self
 			self.virtualObject = object
 			
 			object.loadModel()
 			
 			DispatchQueue.main.async {
-				// Immediately place the object in 3D space.
 				if let lastFocusSquarePos = self.focusSquare?.lastPosition {
 					self.setNewVirtualObjectPosition(lastFocusSquarePos)
 				} else {
@@ -698,8 +689,6 @@ extension MainViewController {
 		
 		addObjectButton.setImage(#imageLiteral(resourceName: "add"), for: [])
 		addObjectButton.setImage(#imageLiteral(resourceName: "addPressed"), for: [.highlighted])
-		
-		UserDefaults.standard.set(-1, for: .selectedObjectID)
 	}
 	
 	func updateVirtualObjectPosition(_ pos: SCNVector3, _ filterPosition: Bool) {

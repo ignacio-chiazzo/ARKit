@@ -4,7 +4,6 @@ class VirtualObjectSelectionViewController: UIViewController, UITableViewDataSou
 	
 	private var tableView: UITableView!
 	private var size: CGSize!
-	private var selectedVirtualObjectRow: Int = -1
 	weak var delegate: VirtualObjectSelectionViewControllerDelegate?
 	
 	init(size: CGSize) {
@@ -31,30 +30,39 @@ class VirtualObjectSelectionViewController: UIViewController, UITableViewDataSou
 		self.preferredContentSize = self.size
 		
 		self.view.addSubview(tableView)
-		
-		selectedVirtualObjectRow = UserDefaults.standard.integer(for: .selectedObjectID)
 	}
+	
+	func getObject(index: Int) -> VirtualObject {
+		switch index {
+		case 0:
+			return Candle()
+		case 1:
+			return Cup()
+		case 2:
+			return Vase()
+		case 3:
+			return Lamp()
+		case 4:
+			return Chair()
+		default:
+			return Cup()
+		}
+	}
+	
+	static let COUNT_OBJECTS = 5
 	
 	// MARK: - UITableViewDelegate
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		// Check if the current row is already selected, then deselect it.
-		if indexPath.row == selectedVirtualObjectRow {
-			delegate?.virtualObjectSelectionViewControllerDidDeselectObject(self)
-		} else {
-			delegate?.virtualObjectSelectionViewController(self, didSelectObjectAt: indexPath.row)
-			UserDefaults.standard.set(indexPath.row, for: .selectedObjectID)
-		}
+		delegate?.virtualObjectSelectionViewController(self, object: getObject(index: indexPath.row))
 		self.dismiss(animated: true, completion: nil)
 	}
 	
 	// MARK: - UITableViewDataSource
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return VirtualObject.availableObjects.count
+		return VirtualObjectSelectionViewController.COUNT_OBJECTS
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cellIsSelected = indexPath.row == selectedVirtualObjectRow
-		
 		let cell = UITableViewCell()
 		let label = UILabel(frame: CGRect(x: 53, y: 10, width: 200, height: 30))
 		let icon = UIImageView(frame: CGRect(x: 15, y: 10, width: 30, height: 30))
@@ -67,13 +75,9 @@ class VirtualObjectSelectionViewController: UIViewController, UITableViewDataSou
 		cell.contentView.insertSubview(vibrancyView, at: 0)
 		vibrancyView.contentView.addSubview(label)
 		vibrancyView.contentView.addSubview(icon)
-
-		if cellIsSelected {
-			cell.accessoryType = .checkmark
-		}
 		
 		// Fill up the cell with data from the object.
-		let object = VirtualObject.availableObjects[indexPath.row]
+		let object = getObject(index: indexPath.row)
 		var thumbnailImage = object.thumbImage!
 		if let invertedImage = thumbnailImage.inverted() {
 			thumbnailImage = invertedImage
@@ -97,6 +101,5 @@ class VirtualObjectSelectionViewController: UIViewController, UITableViewDataSou
 
 // MARK: - VirtualObjectSelectionViewControllerDelegate
 protocol VirtualObjectSelectionViewControllerDelegate: class {
-	func virtualObjectSelectionViewController(_: VirtualObjectSelectionViewController, didSelectObjectAt index: Int)
-	func virtualObjectSelectionViewControllerDidDeselectObject(_: VirtualObjectSelectionViewController)
+	func virtualObjectSelectionViewController(_: VirtualObjectSelectionViewController, object: VirtualObject)
 }

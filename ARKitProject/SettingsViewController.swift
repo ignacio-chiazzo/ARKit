@@ -11,14 +11,10 @@ enum Setting: String {
     case use3DOFFallback
 	case useOcclusionPlanes
 
-    // Integer state used in virtual object picker
-    case selectedObjectID
-
     static func registerDefaults() {
         UserDefaults.standard.register(defaults: [
             Setting.ambientLightEstimation.rawValue: true,
             Setting.dragOnInfinitePlanes.rawValue: true,
-            Setting.selectedObjectID.rawValue: -1
         ])
     }
 }
