@@ -269,25 +269,17 @@ class MainViewController: UIViewController {
 	
 	@IBOutlet weak var screenshotButton: UIButton!
 	@IBAction func takeSnapShot() {
-		guard let currentFrame = sceneView.session.currentFrame else { return }
+		guard let _ = sceneView.session.currentFrame else { return }
 		focusSquare?.isHidden = true
 		
-		// Create an image plane using a snapshot of the view
 		let imagePlane = SCNPlane(width: sceneView.bounds.width / 6000, height: sceneView.bounds.height / 6000)
 		imagePlane.firstMaterial?.diffuse.contents = sceneView.snapshot()
 		imagePlane.firstMaterial?.lightingModel = .constant
 		
-		// Create a plane node and add it to the scene
 		let planeNode = SCNNode(geometry: imagePlane)
 		sceneView.scene.rootNode.addChildNode(planeNode)
 		
-		// Set transform of node to be 50cm in front of camera
-		var translation = matrix_identity_float4x4
-		translation.columns.3.z = -0.50
-		planeNode.simdWorldTransform = matrix_multiply(currentFrame.camera.transform, translation)
-		
 		focusSquare?.isHidden = false
-		displayVirtualObjectTransform()
 	}
 		
 	// MARK: - Settings
