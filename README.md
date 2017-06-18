@@ -1,6 +1,9 @@
-# Placing Virtual Objects in Augmented Reality
+# ARKit - Placing Virtual Objects in Augmented Reality
 
 Learn best practices for visual feedback, gesture interactions, and realistic rendering in AR experiences, as well as tips for building SceneKit-based AR apps.
+
+![BorRc](http://i.makeagif.com/media/6-18-2017/BorRc_.gif)
+![Make](https://camo.githubusercontent.com/898e520431b9cdddfe8d125f4d34e4d5f132d713/687474703a2f2f692e6d616b65616769662e636f6d2f6d656469612f362d31372d323031372f7973797966472e676966)
 
 ## Overview
 
@@ -8,7 +11,17 @@ Augmented reality offers new ways for users to interact with real and virtual 3D
 
 ## Getting Started
 
-ARKit is available on any iOS 11 device, but the world tracking features that enable high-quality AR experiences require a device with the A9 or later processor.
+ARKit is available on any iOS 11 device, but the world tracking features that enable high-quality AR experiences require a device with the A9 chip or later processor.
+
+**IMPORTANT: Here’s The List Of iPhone Models Compatible With The ARKit In iOS 11**
+
+* The 2017 9.7-inch iPad
+* All three variants of the iPad Pro
+* iPhone 7 Plus
+* iPhone 7
+* iPhone 6s Plus
+* iPhone 6s
+* iPhone SE
 
 ## Feedback
 
