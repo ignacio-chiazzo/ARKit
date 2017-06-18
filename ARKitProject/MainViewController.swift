@@ -19,6 +19,8 @@ class MainViewController: UIViewController {
 	// Use average of recent virtual object distances to avoid rapid changes in object scale.
 	var recentVirtualObjectDistances = [CGFloat]()
 	
+	let DEFAULT_DISTANCE_CAMERA_TO_OBJECTS = Float(10)
+	
 	override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -207,13 +209,10 @@ class MainViewController: UIViewController {
 			debugMessageLabel.isHidden = !showDebugVisuals
 			messagePanel.isHidden = !showDebugVisuals
 			planes.values.forEach { $0.showDebugVisualization(showDebugVisuals) }
-			
+			sceneView.debugOptions = []
 			if showDebugVisuals {
 				sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
-			} else {
-				sceneView.debugOptions = []
 			}
-			
             UserDefaults.standard.set(showDebugVisuals, for: .debugMode)
         }
     }
@@ -282,10 +281,10 @@ class MainViewController: UIViewController {
 		let planeNode = SCNNode(geometry: imagePlane)
 		sceneView.scene.rootNode.addChildNode(planeNode)
 		
-		// Set transform of node to be 10cm in front of camera
+		// Set transform of node to be 50cm in front of camera
 		var translation = matrix_identity_float4x4
-		translation.columns.3.z = -0.50 // translation is 10cm in the z-axis
-		planeNode.simdWorldTransform = matrix_multiply(currentFrame.camera.transform, translation) // Apply translation to the plane
+		translation.columns.3.z = -0.50
+		planeNode.simdWorldTransform = matrix_multiply(currentFrame.camera.transform, translation)
 		
 		focusSquare?.isHidden = false
 		displayVirtualObjectTransform()
@@ -691,9 +690,7 @@ extension MainViewController {
 		
 		let cameraWorldPos = SCNVector3.positionFromTransform(cameraTransform)
 		var cameraToPosition = pos - cameraWorldPos
-		
-		// Limit the distance of the object from the camera to a maximum of 10 meters.
-		cameraToPosition.setMaximumLength(10)
+		cameraToPosition.setMaximumLength(DEFAULT_DISTANCE_CAMERA_TO_OBJECTS)
 		
 		object.position = cameraWorldPos + cameraToPosition
 		
@@ -710,7 +707,6 @@ extension MainViewController {
 		addObjectButton.setImage(#imageLiteral(resourceName: "add"), for: [])
 		addObjectButton.setImage(#imageLiteral(resourceName: "addPressed"), for: [.highlighted])
 		
-		// Reset selected object id for row highlighting in object selection view controller.
 		UserDefaults.standard.set(-1, for: .selectedObjectID)
 	}
 	
@@ -725,9 +721,7 @@ extension MainViewController {
 		
 		let cameraWorldPos = SCNVector3.positionFromTransform(cameraTransform)
 		var cameraToPosition = pos - cameraWorldPos
-		
-		// Limit the distance of the object from the camera to a maximum of 10 meters.
-		cameraToPosition.setMaximumLength(10)
+		cameraToPosition.setMaximumLength(DEFAULT_DISTANCE_CAMERA_TO_OBJECTS)
 		
 		// Compute the average distance of the object from the camera over the last ten
 		// updates. If filterPosition is true, compute a new position for the object
@@ -760,7 +754,7 @@ extension MainViewController {
 		let objectPos = planeAnchorNode.convertPosition(object.position, from: object.parent)
 		
 		if objectPos.y == 0 {
-			return; // The object is already on the plane - nothing to do here.
+			return; // The object is already on the plane
 		}
 		
 		// Add 10% tolerance to the corners of the plane.
