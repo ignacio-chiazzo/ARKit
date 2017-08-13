@@ -12,7 +12,7 @@ class MainViewController: UIViewController {
 	var screenCenter: CGPoint?
 	
 	let session = ARSession()
-	var sessionConfig: ARSessionConfiguration = ARWorldTrackingSessionConfiguration()
+	var sessionConfig: ARConfiguration = ARWorldTrackingConfiguration()
 	
 	var trackingFallbackTimer: Timer?
 	
@@ -49,7 +49,7 @@ class MainViewController: UIViewController {
     var use3DOFTracking = false {
 		didSet {
 			if use3DOFTracking {
-				sessionConfig = ARSessionConfiguration()
+				sessionConfig = ARWorldTrackingConfiguration()
 			}
 			sessionConfig.isLightEstimationEnabled = UserDefaults.standard.bool(for: .ambientLightEstimation)
 			session.run(sessionConfig)
@@ -199,7 +199,7 @@ class MainViewController: UIViewController {
 		}
 		
 		DispatchQueue.main.async {
-			self.featurePointCountLabel.text = "Features: \(cloud.count)".uppercased()
+			self.featurePointCountLabel.text = "Features: \(cloud.__count)".uppercased()
 		}
 	}
 	
