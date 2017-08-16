@@ -1,0 +1,14 @@
+sudo: required
+
+os:
+  - osx
+
+before_install:
+  - brew update
+  - brew outdated xctool || brew upgrade xctool
+
+install:
+  - brew install swiftlint
+
+script:
+  - swiftlint
