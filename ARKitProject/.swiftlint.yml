@@ -1,0 +1,4 @@
+disabled_rules: # rule identifiers to exclude from running
+- identifier_name
+- force_cast
+- shorthand_operator
