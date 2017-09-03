@@ -1,21 +1,27 @@
+[![Build Status](https://travis-ci.org/ignacio-chiazzo/ARKit.svg?branch=master)](https://travis-ci.org/ignacio-chiazzo/ARKit)
+
 # ARKit - Placing Virtual Objects in Augmented Reality
 
 Learn best practices for visual feedback, gesture interactions, and realistic rendering in AR experiences, as well as tips for building SceneKit-based AR apps.
 
+![DzSu6G](http://i.makeagif.com/media/6-18-2017/DzSu6G.gif)
 ![BorRc](http://i.makeagif.com/media/6-18-2017/BorRc_.gif)
 ![Make](https://camo.githubusercontent.com/898e520431b9cdddfe8d125f4d34e4d5f132d713/687474703a2f2f692e6d616b65616769662e636f6d2f6d656469612f362d31372d323031372f7973797966472e676966)
 ![nq0m1b](http://i.makeagif.com/media/6-18-2017/nq0m1b.gif)
-![DzSu6G](http://i.makeagif.com/media/6-18-2017/DzSu6G.gif)
 
-## Overview
 
-Augmented reality offers new ways for users to interact with real and virtual 3D content in your app. However, many of the fundamental principles of human interface design are still valid. Convincing AR illusions also require careful attention to 3D asset design and rendering. By following this article's guidelines for AR human interface principles and experimenting with this example code, you can create immersive, intuitive augmented reality experiences.
+## Installation
 
-## Getting Started
+Just clone the repo and build it!
+
+`git clone git@github.com:ignacio-chiazzo/ARKit.git`
+
+## Requirements
+You should be using XCode 9.x.
 
 ARKit is available on any iOS 11 device, but the world tracking features that enable high-quality AR experiences require a device with the A9 chip or later processor.
 
-**IMPORTANT: Here’s The List Of iPhone Models Compatible With The ARKit In iOS 11**
+**IMPORTANT: Here’s the list of iPhone models compatible with ARKit in iOS 11  (with A9 Chip)**
 
 * The 2017 9.7-inch iPad
 * All three variants of the iPad Pro
@@ -24,6 +30,10 @@ ARKit is available on any iOS 11 device, but the world tracking features that en
 * iPhone 6s Plus
 * iPhone 6s
 * iPhone SE
+
+## Overview
+
+Augmented reality offers new ways for users to interact with real and virtual 3D content in your app. However, many of the fundamental principles of human interface design are still valid. Convincing AR illusions also require careful attention to 3D asset design and rendering. By following this article's guidelines for AR human interface principles and experimenting with this example code, you can create immersive, intuitive augmented reality experiences.
 
 ## Feedback
 
@@ -82,9 +92,7 @@ Use the popover presentation (even on iPhone) for auxiliary view controllers to 
 
 For testing and debugging AR experiences, it helps to have a live visualization of the scene processing that ARKit performs. See the `showDebugVisuals` method in this project's `ViewController` class for world tracking visualization, and the `HitTestVisualization` class for a demonstration of ARKit's feature detection methods.
 
-
-##Best Practices and Limitations
-
+## Best Practices and Limitations
 
 World tracking is an inexact science. This process can often produce impressive accuracy, leading to realistic AR experiences. However, it relies on details of the device’s physical environment that are not always consistent or are difficult to measure in real time without some degree of error. To build high-quality AR experiences, be aware of these caveats and tips.
 
