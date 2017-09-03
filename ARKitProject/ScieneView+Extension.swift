@@ -18,7 +18,7 @@ extension ARSCNView {
 			camera.minimumExposure = -1
 		}
 	}
-	
+
 	func enableEnvironmentMapWithIntensity(_ intensity: CGFloat) {
 		if scene.lightingEnvironment.contents == nil {
 			if let environmentMap = UIImage(named: "Models.scnassets/sharedImages/environment_blur.exr") {
