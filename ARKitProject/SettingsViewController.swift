@@ -14,7 +14,7 @@ enum Setting: String {
     static func registerDefaults() {
         UserDefaults.standard.register(defaults: [
             Setting.ambientLightEstimation.rawValue: true,
-            Setting.dragOnInfinitePlanes.rawValue: true,
+            Setting.dragOnInfinitePlanes.rawValue: true
         ])
     }
 }
@@ -34,7 +34,7 @@ extension UserDefaults {
 }
 
 class SettingsViewController: UITableViewController {
-	
+
 	@IBOutlet weak var debugModeSwitch: UISwitch!
 	@IBOutlet weak var scaleWithPinchGestureSwitch: UISwitch!
 	@IBOutlet weak var ambientLightEstimateSwitch: UISwitch!
@@ -43,7 +43,7 @@ class SettingsViewController: UITableViewController {
 	@IBOutlet weak var use3DOFTrackingSwitch: UISwitch!
 	@IBOutlet weak var useAuto3DOFFallbackSwitch: UISwitch!
 	@IBOutlet weak var useOcclusionPlanesSwitch: UISwitch!
-	
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         populateSettings()
@@ -71,7 +71,7 @@ class SettingsViewController: UITableViewController {
             default: break
 		}
 	}
-	
+
 	private func populateSettings() {
 		let defaults = UserDefaults.standard
 
