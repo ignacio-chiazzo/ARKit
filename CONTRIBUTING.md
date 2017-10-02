@@ -8,4 +8,5 @@ When contributing to this repository, please first discuss the change you wish t
    build.
 2. Update the README.md with details of changes to the interface, this includes new environment 
    variables, exposed ports, useful file locations and container parameters.
-3. Tage any of the members of this Repo to review your Pull Request
+3. Tag any of the members of this Repo to review your Pull Request.
+
