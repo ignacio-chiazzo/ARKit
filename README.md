@@ -24,7 +24,7 @@ ARKit is available on any iOS 11 device, but the world tracking features that en
 **IMPORTANT: Here’s the list of iPhone models compatible with ARKit in iOS 11  (with A9 Chip)**
 
 * The 2017 9.7-inch iPad
-* All three variants of the iPad Pro
+* All variants of the iPad Pro
 * iPhone 7 Plus
 * iPhone 7
 * iPhone 6s Plus
