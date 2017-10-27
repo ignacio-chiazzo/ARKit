@@ -21,7 +21,7 @@ You should be using XCode 9.x.
 
 ARKit is available on any iOS 11 device, but the world tracking features that enable high-quality AR experiences require a device with the A9 chip or later processor.
 
-**IMPORTANT: Here’s the list of iPhone models compatible with ARKit in iOS 11  (with A9 Chip)**
+**IMPORTANT: Here’s the list of iPhone and iPad models compatible with ARKit in iOS 11  (with A9 Chip)**
 
 * The 2017 9.7-inch iPad
 * All three variants of the iPad Pro
