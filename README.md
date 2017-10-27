@@ -30,6 +30,9 @@ ARKit is available on any iOS 11 device, but the world tracking features that en
 * iPhone 6s Plus
 * iPhone 6s
 * iPhone SE
+* iPhone 8
+* iPhone 8 Plus
+* iPhone X / iPhone 10 (Out on November 3rd)
 
 ## Overview
 
