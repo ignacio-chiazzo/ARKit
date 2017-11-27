@@ -1,4 +1,7 @@
 [![Build Status](https://travis-ci.org/ignacio-chiazzo/ARKit.svg?branch=master)](https://travis-ci.org/ignacio-chiazzo/ARKit)
+[![GitHub issues open](https://img.shields.io/github/issues/ignacio-chiazzo/ARKit.svg?maxAge=2592000)]() 
+[![HitCount](http://hits.dwyl.io/ignacio/ignacio-chiazzo/ARKit.svg)](http://hits.dwyl.io/ignacio/ignacio-chiazzo/ARKit)
+[![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/fold_left.svg?style=social&label=Contact)](https://twitter.com/IgnacioChiazzo)
 
 # ARKit - Placing Virtual Objects in Augmented Reality
 
