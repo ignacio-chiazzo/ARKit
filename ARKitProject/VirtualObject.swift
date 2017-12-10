@@ -4,11 +4,12 @@ import ARKit
 
 class VirtualObject: SCNNode {
 	static let ROOT_NAME = "Virtual object root node"
-	var modelName: String = ""
 	var fileExtension: String = ""
 	var thumbImage: UIImage!
 	var title: String = ""
+	var modelName: String = ""
 	var modelLoaded: Bool = false
+	var id: Int!
 
 	var viewController: MainViewController?
 
@@ -19,6 +20,7 @@ class VirtualObject: SCNNode {
 
 	init(modelName: String, fileExtension: String, thumbImageFilename: String, title: String) {
 		super.init()
+		self.id = VirtualObjectsManager.shared.generateUid()
 		self.name = VirtualObject.ROOT_NAME
 		self.modelName = modelName
 		self.fileExtension = fileExtension
