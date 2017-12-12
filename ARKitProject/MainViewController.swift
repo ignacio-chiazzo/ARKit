@@ -73,7 +73,6 @@ class MainViewController: UIViewController {
     }
 
     // MARK: - Virtual Object Loading
-	var virtualObject: VirtualObject? // TODO: Remove this and create an array with virtualobject
 	var isLoadingObject: Bool = false {
 		didSet {
 			DispatchQueue.main.async {
@@ -122,7 +121,7 @@ class MainViewController: UIViewController {
 
 		textManager.cancelScheduledMessage(forType: .planeEstimation)
 		textManager.showMessage("SURFACE DETECTED")
-		if virtualObject == nil {
+		if !VirtualObjectsManager.shared.isAVirtualObjectPlaced() {
 			textManager.scheduleMessage("TAP + TO PLACE AN OBJECT", inSeconds: 7.5, messageType: .contentPlacement)
 		}
 	}
@@ -157,7 +156,8 @@ class MainViewController: UIViewController {
 
 	func updateFocusSquare() {
 		guard let screenCenter = screenCenter else { return }
-
+		
+		let virtualObject = VirtualObjectsManager.shared.getVirtualObjectSelected()
 		if virtualObject != nil && sceneView.isNode(virtualObject!, insideFrustumOf: sceneView.pointOfView!) {
 			focusSquare?.hide()
 		} else {
@@ -418,7 +418,7 @@ extension MainViewController {
 // MARK: Gesture Recognized
 extension MainViewController {
 	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-		guard let object = virtualObject else {
+		guard let object = VirtualObjectsManager.shared.getVirtualObjectSelected() else {
 			return
 		}
 
@@ -432,7 +432,7 @@ extension MainViewController {
 	}
 
 	override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-		if virtualObject == nil {
+		if !VirtualObjectsManager.shared.isAVirtualObjectPlaced() {
 			return
 		}
 		currentGesture = currentGesture?.updateGestureFromTouches(touches, .touchMoved)
@@ -440,7 +440,7 @@ extension MainViewController {
 	}
 
 	override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-		if virtualObject == nil {
+		if !VirtualObjectsManager.shared.isAVirtualObjectPlaced() {
 			chooseObject(addObjectButton)
 			return
 		}
@@ -449,7 +449,7 @@ extension MainViewController {
 	}
 
 	override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-		if virtualObject == nil {
+		if !VirtualObjectsManager.shared.isAVirtualObjectPlaced() {
 			return
 		}
 		currentGesture = currentGesture?.updateGestureFromTouches(touches, .touchCancelled)
@@ -485,7 +485,8 @@ extension MainViewController :VirtualObjectSelectionViewControllerDelegate {
 		DispatchQueue.global().async {
 			self.isLoadingObject = true
 			object.viewController = self
-			self.virtualObject = object
+			VirtualObjectsManager.shared.addVirtualObject(virtualObject: object)
+			VirtualObjectsManager.shared.setVirtualObjectSelected(virtualObject: object)
 
 			object.loadModel()
 
@@ -559,7 +560,8 @@ extension MainViewController :ARSCNViewDelegate {
 // MARK: Virtual Object Manipulation
 extension MainViewController {
 	func displayVirtualObjectTransform() {
-		guard let object = virtualObject, let cameraTransform = session.currentFrame?.camera.transform else {
+		guard let object = VirtualObjectsManager.shared.getVirtualObjectSelected(),
+			let cameraTransform = session.currentFrame?.camera.transform else {
 			return
 		}
 
@@ -584,7 +586,7 @@ extension MainViewController {
 		guard let newPosition = pos else {
 			textManager.showMessage("CANNOT PLACE OBJECT\nTry moving left or right.")
 			// Reset the content selection in the menu only if the content has not yet been initially placed.
-			if virtualObject == nil {
+			if !VirtualObjectsManager.shared.isAVirtualObjectPlaced() {
 				resetVirtualObject()
 			}
 			return
@@ -671,7 +673,8 @@ extension MainViewController {
 
 	func setNewVirtualObjectPosition(_ pos: SCNVector3) {
 
-		guard let object = virtualObject, let cameraTransform = session.currentFrame?.camera.transform else {
+		guard let object = VirtualObjectsManager.shared.getVirtualObjectSelected(),
+			let cameraTransform = session.currentFrame?.camera.transform else {
 			return
 		}
 
@@ -689,16 +692,14 @@ extension MainViewController {
 	}
 
 	func resetVirtualObject() {
-		virtualObject?.unloadModel()
-		virtualObject?.removeFromParentNode()
-		virtualObject = nil
+		VirtualObjectsManager.shared.resetVirtualObjects()
 
 		addObjectButton.setImage(#imageLiteral(resourceName: "add"), for: [])
 		addObjectButton.setImage(#imageLiteral(resourceName: "addPressed"), for: [.highlighted])
 	}
 
 	func updateVirtualObjectPosition(_ pos: SCNVector3, _ filterPosition: Bool) {
-		guard let object = virtualObject else {
+		guard let object = VirtualObjectsManager.shared.getVirtualObjectSelected() else {
 			return
 		}
 
@@ -733,7 +734,8 @@ extension MainViewController {
 	}
 
 	func checkIfObjectShouldMoveOntoPlane(anchor: ARPlaneAnchor) {
-		guard let object = virtualObject, let planeAnchorNode = sceneView.node(for: anchor) else {
+		guard let object = VirtualObjectsManager.shared.getVirtualObjectSelected(),
+			let planeAnchorNode = sceneView.node(for: anchor) else {
 			return
 		}
 
