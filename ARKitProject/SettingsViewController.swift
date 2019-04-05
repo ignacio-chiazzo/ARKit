@@ -66,10 +66,10 @@ class SettingsViewController: UITableViewController {
                 defaults.set(sender.isOn, for: .use3DOFTracking)
             case useAuto3DOFFallbackSwitch:
                 defaults.set(sender.isOn, for: .use3DOFFallback)
-			case useOcclusionPlanesSwitch:
-				defaults.set(sender.isOn, for: .useOcclusionPlanes)
+            case useOcclusionPlanesSwitch:
+                defaults.set(sender.isOn, for: .useOcclusionPlanes)
             default: break
-		}
+        }
 	}
 
 	private func populateSettings() {

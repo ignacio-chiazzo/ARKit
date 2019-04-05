@@ -72,7 +72,7 @@ extension Array where Iterator.Element == SCNVector3 {
 	}
 }
 
-extension RangeReplaceableCollection where IndexDistance == Int {
+extension RangeReplaceableCollection {
 	mutating func keepLast(_ elementsToKeep: Int) {
 		if count > elementsToKeep {
 			self.removeFirst(count - elementsToKeep)

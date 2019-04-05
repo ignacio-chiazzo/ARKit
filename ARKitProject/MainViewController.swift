@@ -156,7 +156,7 @@ class MainViewController: UIViewController {
 
 	func updateFocusSquare() {
 		guard let screenCenter = screenCenter else { return }
-		
+
 		let virtualObject = VirtualObjectsManager.shared.getVirtualObjectSelected()
 		if virtualObject != nil && sceneView.isNode(virtualObject!, insideFrustumOf: sceneView.pointOfView!) {
 			focusSquare?.hide()
@@ -468,7 +468,7 @@ extension MainViewController: UIPopoverPresentationControllerDelegate {
 }
 
 // MARK: - VirtualObjectSelectionViewControllerDelegate
-extension MainViewController :VirtualObjectSelectionViewControllerDelegate {
+extension MainViewController: VirtualObjectSelectionViewControllerDelegate {
 	func virtualObjectSelectionViewController(_: VirtualObjectSelectionViewController, object: VirtualObject) {
 		loadVirtualObject(object: object)
 	}
@@ -511,7 +511,7 @@ extension MainViewController :VirtualObjectSelectionViewControllerDelegate {
 }
 
 // MARK: - ARSCNViewDelegate
-extension MainViewController :ARSCNViewDelegate {
+extension MainViewController: ARSCNViewDelegate {
 	func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
 		refreshFeaturePoints()
 
