@@ -36,8 +36,8 @@ class HitTestVisualization {
 		}
 
 		while hitTestPoints.count < xAxisSamples * yAxisSamples {
-			hitTestPoints.append(createCrossNode(size: 0.01, color:UIColor.blue, horizontal:false))
-			hitTestFeaturePoints.append(createCrossNode(size: 0.01, color:UIColor.yellow, horizontal:true))
+			hitTestPoints.append(createCrossNode(size: 0.01, color: UIColor.blue, horizontal:false))
+			hitTestFeaturePoints.append(createCrossNode(size: 0.01, color: UIColor.yellow, horizontal:true))
 		}
 	}
 
