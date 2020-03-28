@@ -7,7 +7,8 @@
 
 Learn best practices for visual feedback, gesture interactions, and realistic rendering in AR experiences, as well as tips for building SceneKit-based AR apps.
 
-<img src="/images/Example1.gif" width="425" height="800"/> <img src="/images/Example2.gif" width="425" height="800"/> 
+<img src="/images/Example1.gif" width="425" height="800"/> <img src="/images/Example2.png" width="425" height="800"/>
+<img src="/images/Example3.gif" width="425" height="800"/> <img src="/images/Example4.gif" width="425" height="800"/>
 
 See more examples [here](https://www.youtube.com/channel/UCtjfdIk2kNKzL9gmcFxDnDw)
 
