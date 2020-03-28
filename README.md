@@ -9,6 +9,8 @@ Learn best practices for visual feedback, gesture interactions, and realistic re
 
 <img src="/images/Example1.gif" width="425" height="800"/> <img src="/images/Example2.gif" width="425" height="800"/> 
 
+See more examples [here](https://www.youtube.com/channel/UCtjfdIk2kNKzL9gmcFxDnDw)
+
 ## Installation
 
 Just clone the repo and build it!
