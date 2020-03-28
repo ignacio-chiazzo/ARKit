@@ -7,11 +7,8 @@
 
 Learn best practices for visual feedback, gesture interactions, and realistic rendering in AR experiences, as well as tips for building SceneKit-based AR apps.
 
-![DzSu6G](http://i.makeagif.com/media/6-18-2017/DzSu6G.gif)
-![BorRc](http://i.makeagif.com/media/6-18-2017/BorRc_.gif)
-![Make](https://camo.githubusercontent.com/898e520431b9cdddfe8d125f4d34e4d5f132d713/687474703a2f2f692e6d616b65616769662e636f6d2f6d656469612f362d31372d323031372f7973797966472e676966)
-![nq0m1b](http://i.makeagif.com/media/6-18-2017/nq0m1b.gif)
-
+![Image1](/images/Example1.gif)
+![Image1](/images/Example2.gif)
 
 ## Installation
 
@@ -35,7 +32,8 @@ ARKit is available on any iOS 11 device, but the world tracking features that en
 * iPhone SE
 * iPhone 8
 * iPhone 8 Plus
-* iPhone X / iPhone 10 (Out on November 3rd)
+* iPhone X / iPhone 10
+* All new iPhones newer than the previous mentioned
 
 ## Overview
 
