@@ -7,8 +7,9 @@
 
 Learn best practices for visual feedback, gesture interactions, and realistic rendering in AR experiences, as well as tips for building SceneKit-based AR apps.
 
-![Image1](/images/Example1.gif)
-![Image1](/images/Example2.gif)
+|||
+|-|-|
+|![Image1](/images/Example1.gif)|![Image1](/images/Example2.gif)|
 
 ## Installation
 
