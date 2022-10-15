@@ -18,6 +18,8 @@ extension ARCamera.TrackingState {
                 return "INITIALIZING"
             case .relocalizing:
                 return "INITIALIZING"
+            @unknown default:
+                return ""
             }
         }
 	}

@@ -100,6 +100,6 @@ class VirtualObjectSelectionViewController: UIViewController, UITableViewDataSou
 }
 
 // MARK: - VirtualObjectSelectionViewControllerDelegate
-protocol VirtualObjectSelectionViewControllerDelegate: class {
+protocol VirtualObjectSelectionViewControllerDelegate: AnyObject {
 	func virtualObjectSelectionViewController(_: VirtualObjectSelectionViewController, object: VirtualObject)
 }
