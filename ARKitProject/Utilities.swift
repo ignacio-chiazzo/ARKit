@@ -106,7 +106,7 @@ extension SCNNode {
 extension SCNVector3 {
 
 	init(_ vec: vector_float3) {
-        self.init(vec.x, vec.y, vec.z)
+		self.init(vec.x, vec.y, vec.z)
 	}
 
 	func length() -> Float {
@@ -222,11 +222,11 @@ extension SCNMaterial {
 extension CGPoint {
 
 	init(_ size: CGSize) {
-        self.init(x: size.width, y: size.height)
+		self.init(x: size.width, y: size.height)
 	}
 
 	init(_ vector: SCNVector3) {
-        self.init(x: CGFloat(vector.x), y: CGFloat(vector.y))
+		self.init(x: CGFloat(vector.x), y: CGFloat(vector.y))
 	}
 
 	func distanceTo(_ point: CGPoint) -> CGFloat {
@@ -283,7 +283,7 @@ func *= (left: inout CGPoint, right: CGFloat) {
 extension CGSize {
 
 	init(_ point: CGPoint) {
-        self.init(width: point.x, height: point.y)
+		self.init(width: point.x, height: point.y)
 	}
 
 	func friendlyString() -> String {
