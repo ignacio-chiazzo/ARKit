@@ -765,7 +765,7 @@ extension MainViewController {
 
 			SCNTransaction.begin()
 			SCNTransaction.animationDuration = 0.5
-            SCNTransaction.animationTimingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+			SCNTransaction.animationTimingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
 			object.position.y = anchor.transform.columns.3.y
 			SCNTransaction.commit()
 		}

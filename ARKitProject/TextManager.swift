@@ -175,7 +175,7 @@ class TextManager {
 	let blurEffectViewTag = 100
 
 	func blurBackground() {
-        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.light)
+		let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.light)
 		let blurEffectView = UIVisualEffectView(effect: blurEffect)
 		blurEffectView.frame = viewController.view.bounds
 		blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
