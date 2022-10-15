@@ -22,7 +22,7 @@ class TextManager {
 		showHideMessage(hide: false, animated: true)
 
 		if autoHide {
-			let charCount = text.characters.count
+			let charCount = text.count
 			let displayDuration: TimeInterval = min(10, Double(charCount) / 15.0 + 1.0)
 			messageHideTimer = Timer.scheduledTimer(withTimeInterval: displayDuration,
 			                                        repeats: false,
@@ -43,7 +43,7 @@ class TextManager {
 
 		showHideDebugMessage(hide: false, animated: true)
 
-		let charCount = message.characters.count
+		let charCount = message.count
 		let displayDuration: TimeInterval = min(10, Double(charCount) / 15.0 + 1.0)
 		debugMessageHideTimer = Timer.scheduledTimer(withTimeInterval: displayDuration,
 		                                             repeats: false,
@@ -116,6 +116,7 @@ class TextManager {
 				case .insufficientFeatures: message += "Try pointing at a flat surface, or reset the session."
                 case .initializing: message += "Initializing."
                 case .relocalizing: message += "Try pointing at a flat surface, or reset the session."
+                @unknown default: message += ""
                 }
 			case .normal: break
 			}
@@ -174,7 +175,7 @@ class TextManager {
 	let blurEffectViewTag = 100
 
 	func blurBackground() {
-		let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.light)
+        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.light)
 		let blurEffectView = UIVisualEffectView(effect: blurEffect)
 		blurEffectView.frame = viewController.view.bounds
 		blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]

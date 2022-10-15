@@ -37,7 +37,7 @@ class VirtualObjectsManager {
 	}
 
 	func removeVirtualObject(virtualObject: VirtualObject) {
-		if let index = virtualObjects.index(where: { $0.id == virtualObject.id }) {
+        if let index = virtualObjects.firstIndex(where: { $0.id == virtualObject.id }) {
 			virtualObjects.remove(at: index)
 		} else {
 			os_log("Element not found", type: .error)
